@@ -1,7 +1,7 @@
 -- 1. Create a workspace for our project
 CREATE DATABASE hospital_audit;
 USE hospital_audit;
-
+--turned table into text to reduce upload errors
 CREATE TABLE diabetic_data (
     encounter_id TEXT, patient_nbr TEXT, race TEXT, gender TEXT, age TEXT, weight TEXT,
     admission_type_id TEXT, discharge_disposition_id TEXT, admission_source_id TEXT,
@@ -17,15 +17,16 @@ CREATE TABLE diabetic_data (
     diabetesMed TEXT, readmitted TEXT
 );
 SET GLOBAL LOCAL_INFILE =1;
-SHOW VARIABLES LIKE "secure_file_priv"; -- could not import local file data so i asked sql to brin a secur file loaction since it says i can execute because its runnin on secure file piv
+SHOW VARIABLES LIKE "secure_file_priv"; -- could not import local file data so i asked sql to bring a securE file loaction since it says i can execute because its runnin on secure file piv
+-- -- 2. Import the actual CSV file from your local computer
 LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\diabetic_data.csv' 
-INTO TABLE diabetic_data 
-FIELDS TERMINATED BY ',' 
-OPTIONALLY ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
+INTO TABLE diabetic_data -- Specifies which table to dump the data into
+FIELDS TERMINATED BY ',' -- -- Tells SQL that each column is separated by a comma (CSV format)
+OPTIONALLY ENCLOSED BY '"' -- Handles data values that might have quotes around them
+LINES TERMINATED BY '\n' -- Tells SQL that a new line in the file represents a new row
+IGNORE 1 ROWS; -- Skips the first row (the header) so column names aren't imported as data
 
--- 2. Check the count (It should be 0)
+-- 2. Check the count 
 SELECT COUNT(*) FROM diabetic_data;
 
 /* DATA CLEANING PHASE
